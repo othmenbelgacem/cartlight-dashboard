@@ -1,0 +1,43 @@
+@import 'tailwindcss';
+@import './theme/themes.css';
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-link: var(--link);
+  --color-hot: var(--hot);
+  --color-on-hot: var(--on-hot);
+  --font-display:
+    'Bricolage Grotesque Variable', 'Readex Pro Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Readex Pro Variable', ui-sans-serif, system-ui, sans-serif;
+  --radius-tile: 1.5rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

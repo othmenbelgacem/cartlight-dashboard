@@ -1,0 +1,50 @@
+/*
+  Cartlight design tokens. Concept: a shop window at night.
+  Every colour in the app comes from these variables, never from hard-coded values.
+  Text pairs are checked for 4.5:1 contrast by themes.test.ts.
+*/
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #e9f0ed;
+  --surface: #ffffff;
+  --raised: #f4f8f6;
+  --line: #c5d6d0;
+  --fg: #0d2b28;
+  --muted: #44625d;
+  --accent: #ffb020;
+  --on-accent: #0d2b28;
+  --link: #0a6860;
+  --hot: #c23b26;
+  --on-hot: #ffffff;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a201e;
+  --surface: #11302d;
+  --raised: #173b37;
+  --line: #2a524d;
+  --fg: #e6f2ee;
+  --muted: #9dbbb4;
+  --accent: #ffb020;
+  --on-accent: #0a201e;
+  --link: #5ed6c8;
+  --hot: #ff7a66;
+  --on-hot: #0a201e;
+}
+
+[data-theme='holiday'] {
+  color-scheme: dark;
+  --bg: #2a0e1a;
+  --surface: #3b1626;
+  --raised: #4a1e31;
+  --line: #6b3249;
+  --fg: #fff0e4;
+  --muted: #d9b8ae;
+  --accent: #f5c451;
+  --on-accent: #2a0e1a;
+  --link: #ffd98a;
+  --hot: #ff6b6b;
+  --on-hot: #2a0e1a;
+}
