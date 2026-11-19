@@ -4,6 +4,7 @@ import {
   Package,
   Palette,
   Settings,
+  Shapes,
   ShoppingBag,
   Users,
   type LucideIcon,
@@ -22,6 +23,7 @@ export const STORE_NAV: NavItem[] = [
 export const SYSTEM_NAV: NavItem[] = [
   { path: '/settings', label: 'Settings', Icon: Settings },
   { path: '/foundation', label: 'Design foundation', Icon: Palette },
+  { path: '/components', label: 'Components', Icon: Shapes },
 ]
 
 export const ALL_NAV: NavItem[] = [...STORE_NAV, ...SYSTEM_NAV]

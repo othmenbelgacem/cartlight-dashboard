@@ -15,6 +15,8 @@ const PAIRS: [string, string][] = [
   ['muted', 'surface'],
   ['link', 'bg'],
   ['link', 'surface'],
+  ['hot', 'bg'],
+  ['hot', 'surface'],
   ['on-accent', 'accent'],
   ['on-hot', 'hot'],
 ]

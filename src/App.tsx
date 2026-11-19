@@ -9,6 +9,7 @@ const Customers = lazy(() => import('./pages/placeholders').then((m) => ({ defau
 const Analytics = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Analytics })))
 const Settings = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Settings })))
 const Foundation = lazy(() => import('./pages/Foundation'))
+const Components = lazy(() => import('./pages/Components'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />
           <Route path="foundation" element={<Foundation />} />
+          <Route path="components" element={<Components />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
