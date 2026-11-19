@@ -1,6 +1,17 @@
 import { Suspense, useEffect, useState } from 'react'
-import { ChevronRight, Languages, Menu, Moon, Snowflake, Sun, type LucideIcon } from 'lucide-react'
-import { Outlet, useLocation } from 'react-router'
+import {
+  ChevronRight,
+  Languages,
+  Menu,
+  Moon,
+  PanelLeftClose,
+  Search,
+  Snowflake,
+  Sun,
+  type LucideIcon,
+} from 'lucide-react'
+import { Outlet, useLocation, useNavigate } from 'react-router'
+import { CommandPalette, type Command } from '../components/ui/CommandPalette'
 import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSettings'
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
@@ -10,6 +21,8 @@ const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
   dark: { label: 'Dark', Icon: Moon },
   holiday: { label: 'Holiday', Icon: Snowflake },
 }
+
+const SHORTCUT = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl K'
 
 function Breadcrumbs() {
   const { pathname } = useLocation()
@@ -32,8 +45,10 @@ function Breadcrumbs() {
 
 export default function AppShell() {
   const { theme, setTheme, dir, setDir } = useThemeSettings()
+  const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -43,6 +58,54 @@ export default function AppShell() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [menuOpen])
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setPaletteOpen((open) => !open)
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  const commands: Command[] = [
+    ...ALL_NAV.map(({ path, label, Icon }) => ({
+      id: `go-${path}`,
+      label: `Go to ${label}`,
+      group: 'Pages',
+      icon: <Icon size={18} />,
+      run: () => navigate(path),
+    })),
+    ...THEMES.map((name) => {
+      const { label, Icon } = THEME_META[name]
+      return {
+        id: `theme-${name}`,
+        label: `Switch to ${label} theme`,
+        group: 'Appearance',
+        icon: <Icon size={18} />,
+        keywords: 'color mode',
+        run: () => setTheme(name),
+      }
+    }),
+    {
+      id: 'direction',
+      label: dir === 'rtl' ? 'Switch to left-to-right' : 'Switch to right-to-left',
+      group: 'Appearance',
+      icon: <Languages size={18} />,
+      keywords: 'direction arabic rtl ltr language',
+      run: () => setDir(dir === 'rtl' ? 'ltr' : 'rtl'),
+    },
+    {
+      id: 'sidebar',
+      label: collapsed ? 'Expand sidebar' : 'Collapse sidebar',
+      group: 'Layout',
+      icon: <PanelLeftClose size={18} className="rtl:-scale-x-100" />,
+      keywords: 'menu navigation',
+      run: () => setCollapsed((value) => !value),
+    },
+  ]
 
   return (
     <div className="min-h-screen lg:flex">
@@ -76,6 +139,18 @@ export default function AppShell() {
           <Breadcrumbs />
 
           <div className="ms-auto flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Open command palette"
+              onClick={() => setPaletteOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-surface p-2.5 text-sm text-muted transition-colors hover:text-fg md:px-4 md:py-2"
+            >
+              <Search size={18} />
+              <span className="hidden md:inline">Search</span>
+              <kbd className="hidden rounded-md border border-line bg-raised px-1.5 py-0.5 font-sans text-xs lg:inline">
+                {SHORTCUT}
+              </kbd>
+            </button>
             <div
               role="group"
               aria-label="Theme"
@@ -128,6 +203,12 @@ export default function AppShell() {
           </Suspense>
         </main>
       </div>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        commands={commands}
+      />
     </div>
   )
 }

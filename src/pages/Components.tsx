@@ -15,6 +15,7 @@ import { useToast } from '../components/ui/toast-context'
 import { Tooltip } from '../components/ui/Tooltip'
 
 const h2 = 'font-display text-xl font-bold'
+const kbd = 'rounded-md border border-line bg-raised px-2 py-1 font-sans text-xs'
 
 type DemoOrder = {
   id: string
@@ -138,11 +139,12 @@ export default function Components() {
           <div className="mt-5 flex items-center gap-3">
             <Avatar name="Othmen Belgacem" size="sm" />
             <Avatar name="Amel Trabelsi" />
-            <Avatar name="Sami" size="lg" />
+            <Avatar name="Sami Gharbi" size="lg" />
+            <Avatar name="Nour Haddad" />
           </div>
         </BentoTile>
 
-        <BentoTile size="large">
+        <BentoTile size="large" tall>
           <h2 className={h2}>Form fields</h2>
           <div className="mt-4 grid gap-4">
             <Input
@@ -233,35 +235,6 @@ export default function Components() {
         </BentoTile>
 
         <BentoTile size="large">
-          <h2 className={h2}>Tabs</h2>
-          <div className="mt-4">
-            <Tabs
-              label="Order sections"
-              tabs={[
-                {
-                  id: 'items',
-                  label: 'Items',
-                  content: <p className="text-muted">3 items, packed in 2 boxes.</p>,
-                },
-                {
-                  id: 'delivery',
-                  label: 'Delivery',
-                  content: (
-                    <p className="text-muted">Express delivery to Tunis, arriving Friday.</p>
-                  ),
-                },
-                {
-                  id: 'history',
-                  label: 'History',
-                  content: <p className="text-muted">Created today at 09:14 by the storefront.</p>,
-                },
-              ]}
-            />
-          </div>
-          <p className="mt-4 text-sm text-muted">Arrow keys move between tabs (reversed in RTL).</p>
-        </BentoTile>
-
-        <BentoTile size="large">
           <h2 className={h2}>Toasts</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button
@@ -291,13 +264,46 @@ export default function Components() {
         </BentoTile>
 
         <BentoTile size="large">
+          <h2 className={h2}>Tabs</h2>
+          <div className="mt-4">
+            <Tabs
+              label="Order sections"
+              tabs={[
+                {
+                  id: 'items',
+                  label: 'Items',
+                  content: <p className="text-muted">3 items, packed in 2 boxes.</p>,
+                },
+                {
+                  id: 'delivery',
+                  label: 'Delivery',
+                  content: (
+                    <p className="text-muted">Express delivery to Tunis, arriving Friday.</p>
+                  ),
+                },
+                {
+                  id: 'history',
+                  label: 'History',
+                  content: <p className="text-muted">Created today at 09:14 by the storefront.</p>,
+                },
+              ]}
+            />
+          </div>
+          <p className="mt-4 text-sm text-muted">Arrow keys move between tabs (reversed in RTL).</p>
+        </BentoTile>
+
+        <BentoTile size="large">
           <h2 className={h2}>Loading placeholder</h2>
-          <div className="mt-4 flex items-center gap-4" role="status" aria-label="Loading">
-            <Skeleton className="size-12 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-4 w-2/3" />
-              <Skeleton className="h-4 w-1/3" />
-            </div>
+          <div className="mt-4 grid gap-5" role="status" aria-label="Loading">
+            {[0, 1, 2].map((row) => (
+              <div key={row} className="flex items-center gap-4">
+                <Skeleton className="size-11 shrink-0 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+            ))}
           </div>
         </BentoTile>
 
@@ -309,6 +315,18 @@ export default function Components() {
             description="Orders show up here as soon as customers check out."
             action={<Button variant="secondary">Add a test order</Button>}
           />
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Command palette</h2>
+          <p className="mt-3 text-muted">
+            Press <kbd className={kbd}>Ctrl</kbd> + <kbd className={kbd}>K</kbd> (
+            <kbd className={kbd}>⌘</kbd> + <kbd className={kbd}>K</kbd> on Mac) anywhere, or use the
+            Search button in the top bar.
+          </p>
+          <p className="mt-3 text-sm text-muted">
+            Try typing “orders”, “dark” or “direction”. Arrow keys move, Enter runs the command.
+          </p>
         </BentoTile>
 
         <BentoTile size="full">

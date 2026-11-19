@@ -6,6 +6,15 @@ const SIZES = {
   lg: 'size-14 text-lg',
 }
 
+// Three looks, picked from the name so the same person always gets the same colour.
+const TONES = ['bg-accent text-on-accent', 'bg-link text-bg', 'bg-fg text-bg']
+
+function toneFor(name: string) {
+  let sum = 0
+  for (const character of name) sum += character.codePointAt(0) ?? 0
+  return TONES[sum % TONES.length]
+}
+
 function initials(name: string) {
   const words = name.trim().split(/\s+/).filter(Boolean)
   const first = words[0]?.[0] ?? ''
@@ -22,7 +31,8 @@ export function Avatar({ name, size = 'md', className }: AvatarProps) {
       role="img"
       aria-label={name}
       className={cx(
-        'inline-flex shrink-0 items-center justify-center rounded-full bg-accent font-semibold text-on-accent',
+        'inline-flex shrink-0 items-center justify-center rounded-full font-semibold',
+        toneFor(name),
         SIZES[size],
         className,
       )}

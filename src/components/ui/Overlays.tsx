@@ -1,7 +1,8 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { IconButton } from './Button'
+import { useModalDialog } from './useModalDialog'
 
 type OverlayProps = {
   open: boolean
@@ -17,30 +18,8 @@ type DialogProps = OverlayProps & { side?: boolean }
 // Both overlays use the browser's built-in <dialog>: it traps the keyboard focus,
 // closes on Escape and blocks the page behind it, without extra code.
 function Dialog({ open, onClose, title, children, footer, side = false }: DialogProps) {
-  const ref = useRef<HTMLDialogElement>(null)
+  const ref = useModalDialog(open)
   const titleId = useId()
-
-  useEffect(() => {
-    const dialog = ref.current
-    if (!dialog) return
-    if (open && !dialog.open) {
-      if (typeof dialog.showModal === 'function') dialog.showModal()
-      else dialog.setAttribute('open', '')
-    }
-    if (!open && dialog.open) {
-      if (typeof dialog.close === 'function') dialog.close()
-      else dialog.removeAttribute('open')
-    }
-  }, [open])
-
-  useEffect(() => {
-    if (!open) return
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
-    }
-  }, [open])
 
   return (
     <dialog

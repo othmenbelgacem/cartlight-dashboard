@@ -3,7 +3,16 @@ import { cx } from '../../lib/cx'
 
 /** A grey pulsing placeholder shown while content loads. Decorative, so it is hidden from screen readers. */
 export function Skeleton({ className }: { className?: string }) {
-  return <div aria-hidden="true" className={cx('animate-pulse rounded-xl bg-line/60', className)} />
+  return (
+    <div
+      aria-hidden="true"
+      className={cx(
+        'animate-pulse bg-line/60',
+        className?.includes('rounded') ? '' : 'rounded-xl',
+        className,
+      )}
+    />
+  )
 }
 
 type EmptyStateProps = {
