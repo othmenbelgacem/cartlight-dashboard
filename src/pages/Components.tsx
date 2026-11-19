@@ -1,21 +1,96 @@
 import { useState } from 'react'
-import { ArrowRight, ChevronDown, Copy, Pencil, Plus, Trash2 } from 'lucide-react'
+import { ArrowRight, ChevronDown, Copy, PackageOpen, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Avatar } from '../components/ui/Avatar'
 import { Badge } from '../components/ui/Badge'
 import { Button, IconButton } from '../components/ui/Button'
 import { BentoGrid, BentoTile } from '../components/ui/Card'
 import { Checkbox, Radio, Switch } from '../components/ui/Choices'
+import { DataTable, type Column } from '../components/ui/DataTable'
 import { DropdownMenu } from '../components/ui/DropdownMenu'
 import { Input, Select, Textarea } from '../components/ui/fields'
 import { Drawer, Modal } from '../components/ui/Overlays'
+import { EmptyState, Skeleton } from '../components/ui/States'
+import { Tabs } from '../components/ui/Tabs'
+import { useToast } from '../components/ui/toast-context'
 import { Tooltip } from '../components/ui/Tooltip'
 
 const h2 = 'font-display text-xl font-bold'
+
+type DemoOrder = {
+  id: string
+  customer: string
+  status: 'New' | 'Packed' | 'Shipped' | 'Cancelled'
+  total: number
+  date: string
+}
+
+const STATUS_TONE = {
+  New: 'accent',
+  Packed: 'neutral',
+  Shipped: 'info',
+  Cancelled: 'danger',
+} as const
+
+const ORDERS: DemoOrder[] = [
+  { id: '#1042', customer: 'Amel Trabelsi', status: 'New', total: 89.5, date: '2026-11-18' },
+  { id: '#1041', customer: 'Sami Gharbi', status: 'Packed', total: 142, date: '2026-11-18' },
+  { id: '#1040', customer: 'Nour Haddad', status: 'Shipped', total: 36.9, date: '2026-11-17' },
+  { id: '#1039', customer: 'Karim Jlassi', status: 'New', total: 215.75, date: '2026-11-17' },
+  { id: '#1038', customer: 'Hela Mansouri', status: 'Shipped', total: 64, date: '2026-11-16' },
+  {
+    id: '#1037',
+    customer: 'Bilel Ben Salah',
+    status: 'Cancelled',
+    total: 18.5,
+    date: '2026-11-16',
+  },
+  { id: '#1036', customer: 'Ines Cherif', status: 'Packed', total: 120, date: '2026-11-15' },
+  { id: '#1035', customer: 'Youssef Mejri', status: 'Shipped', total: 77.2, date: '2026-11-15' },
+  { id: '#1034', customer: 'Rim Dridi', status: 'New', total: 305, date: '2026-11-14' },
+  { id: '#1033', customer: 'Walid Sassi', status: 'Shipped', total: 49.9, date: '2026-11-14' },
+  { id: '#1032', customer: 'Salma Ayari', status: 'Packed', total: 95, date: '2026-11-13' },
+  { id: '#1031', customer: 'Hatem Bouzid', status: 'Shipped', total: 28, date: '2026-11-13' },
+]
+
+const COLUMNS: Column<DemoOrder>[] = [
+  {
+    id: 'id',
+    header: 'Order',
+    cell: (row) => <span className="font-medium">{row.id}</span>,
+    sortBy: (row) => row.id,
+  },
+  {
+    id: 'customer',
+    header: 'Customer',
+    cell: (row) => (
+      <span className="flex items-center gap-3">
+        <Avatar name={row.customer} size="sm" />
+        {row.customer}
+      </span>
+    ),
+    sortBy: (row) => row.customer,
+  },
+  {
+    id: 'status',
+    header: 'Status',
+    cell: (row) => <Badge tone={STATUS_TONE[row.status]}>{row.status}</Badge>,
+    sortBy: (row) => row.status,
+  },
+  { id: 'date', header: 'Date', cell: (row) => row.date, sortBy: (row) => row.date },
+  {
+    id: 'total',
+    header: 'Total',
+    cell: (row) => `${row.total.toFixed(3)} TND`,
+    sortBy: (row) => row.total,
+    numeric: true,
+  },
+]
 
 export default function Components() {
   const [modalOpen, setModalOpen] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [lastAction, setLastAction] = useState('none yet')
+  const toast = useToast()
 
   return (
     <div>
@@ -155,6 +230,102 @@ export default function Components() {
           <p className="mt-4 text-sm text-muted">
             Press Escape or click outside to close. The drawer slides in from the end side.
           </p>
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Tabs</h2>
+          <div className="mt-4">
+            <Tabs
+              label="Order sections"
+              tabs={[
+                {
+                  id: 'items',
+                  label: 'Items',
+                  content: <p className="text-muted">3 items, packed in 2 boxes.</p>,
+                },
+                {
+                  id: 'delivery',
+                  label: 'Delivery',
+                  content: (
+                    <p className="text-muted">Express delivery to Tunis, arriving Friday.</p>
+                  ),
+                },
+                {
+                  id: 'history',
+                  label: 'History',
+                  content: <p className="text-muted">Created today at 09:14 by the storefront.</p>,
+                },
+              ]}
+            />
+          </div>
+          <p className="mt-4 text-sm text-muted">Arrow keys move between tabs (reversed in RTL).</p>
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Toasts</h2>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button
+              variant="secondary"
+              onClick={() =>
+                toast({ title: 'Order saved', description: 'Order #1042 was updated.' })
+              }
+            >
+              Show a toast
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                toast({
+                  title: 'Could not save',
+                  description: 'Check your connection and try again.',
+                  tone: 'danger',
+                })
+              }
+            >
+              Show an error toast
+            </Button>
+          </div>
+          <p className="mt-4 text-sm text-muted">
+            Toasts disappear after 5 seconds and are announced to screen readers.
+          </p>
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Loading placeholder</h2>
+          <div className="mt-4 flex items-center gap-4" role="status" aria-label="Loading">
+            <Skeleton className="size-12 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/3" />
+            </div>
+          </div>
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Empty state</h2>
+          <EmptyState
+            icon={<PackageOpen size={24} />}
+            title="No orders yet"
+            description="Orders show up here as soon as customers check out."
+            action={<Button variant="secondary">Add a test order</Button>}
+          />
+        </BentoTile>
+
+        <BentoTile size="full">
+          <h2 className={h2}>Data table</h2>
+          <p className="mt-1 mb-4 text-sm text-muted">
+            Click a column header to sort. Select rows with the checkboxes. 12 sample orders, 5 per
+            page.
+          </p>
+          <DataTable
+            caption="Recent orders"
+            columns={COLUMNS}
+            rows={ORDERS}
+            getRowId={(row) => row.id}
+            getRowLabel={(row) => `order ${row.id}`}
+            pageSize={5}
+            selectable
+          />
         </BentoTile>
       </BentoGrid>
 

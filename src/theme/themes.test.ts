@@ -13,6 +13,7 @@ const PAIRS: [string, string][] = [
   ['fg', 'raised'],
   ['muted', 'bg'],
   ['muted', 'surface'],
+  ['muted', 'raised'],
   ['link', 'bg'],
   ['link', 'surface'],
   ['hot', 'bg'],
