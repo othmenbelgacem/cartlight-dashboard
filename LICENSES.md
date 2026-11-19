@@ -13,6 +13,7 @@ Rule: only MIT, ISC, Apache-2.0 and SIL OFL assets. No images or stock photos ar
 | lucide-react | 1.75.0 | ISC |
 | react | 19.3.1 | MIT |
 | react-dom | 19.3.1 | MIT |
+| react-router | 8.5.2 | MIT |
 | tailwindcss | 4.3.5 | MIT |
 
 ## Development tools (not shipped to buyers' apps)

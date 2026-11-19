@@ -6,6 +6,7 @@ import App from './App'
 describe('theme and direction controls', () => {
   beforeEach(() => {
     localStorage.clear()
+    window.history.pushState({}, '', '/')
     delete document.documentElement.dataset.theme
     document.documentElement.dir = 'ltr'
   })
