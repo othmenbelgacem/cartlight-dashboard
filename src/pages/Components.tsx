@@ -1,14 +1,22 @@
-import { ArrowRight, Plus, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowRight, ChevronDown, Copy, Pencil, Plus, Trash2 } from 'lucide-react'
 import { Avatar } from '../components/ui/Avatar'
 import { Badge } from '../components/ui/Badge'
 import { Button, IconButton } from '../components/ui/Button'
 import { BentoGrid, BentoTile } from '../components/ui/Card'
 import { Checkbox, Radio, Switch } from '../components/ui/Choices'
+import { DropdownMenu } from '../components/ui/DropdownMenu'
 import { Input, Select, Textarea } from '../components/ui/fields'
+import { Drawer, Modal } from '../components/ui/Overlays'
+import { Tooltip } from '../components/ui/Tooltip'
 
 const h2 = 'font-display text-xl font-bold'
 
 export default function Components() {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [lastAction, setLastAction] = useState('none yet')
+
   return (
     <div>
       <h1 className="font-display text-4xl font-bold tracking-tight">Components</h1>
@@ -96,7 +104,106 @@ export default function Components() {
             </div>
           </div>
         </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Tooltip and menu</h2>
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            <Tooltip label="Copies the order link">
+              <Button variant="secondary">Hover or focus me</Button>
+            </Tooltip>
+            <DropdownMenu
+              label="Order actions"
+              items={[
+                {
+                  label: 'Edit',
+                  icon: <Pencil size={16} />,
+                  onSelect: () => setLastAction('Edit'),
+                },
+                {
+                  label: 'Duplicate',
+                  icon: <Copy size={16} />,
+                  onSelect: () => setLastAction('Duplicate'),
+                },
+                {
+                  label: 'Delete',
+                  icon: <Trash2 size={16} />,
+                  danger: true,
+                  onSelect: () => setLastAction('Delete'),
+                },
+              ]}
+            >
+              Actions
+              <ChevronDown size={16} />
+            </DropdownMenu>
+          </div>
+          <p className="mt-4 text-sm text-muted">Last menu action: {lastAction}</p>
+          <p className="mt-1 text-sm text-muted">
+            Menu keys: arrows to move, Enter to choose, Escape to close.
+          </p>
+        </BentoTile>
+
+        <BentoTile size="large">
+          <h2 className={h2}>Modal and drawer</h2>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button variant="danger" onClick={() => setModalOpen(true)}>
+              Delete order…
+            </Button>
+            <Button variant="secondary" onClick={() => setDrawerOpen(true)}>
+              Open order details
+            </Button>
+          </div>
+          <p className="mt-4 text-sm text-muted">
+            Press Escape or click outside to close. The drawer slides in from the end side.
+          </p>
+        </BentoTile>
       </BentoGrid>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Delete order #1042?"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={() => setModalOpen(false)}>
+              Delete order
+            </Button>
+          </>
+        }
+      >
+        <p className="text-muted">
+          The order is removed from the pipeline and the customer is not notified. This cannot be
+          undone.
+        </p>
+      </Modal>
+
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Order #1042"
+        footer={<Button onClick={() => setDrawerOpen(false)}>Done</Button>}
+      >
+        <div className="flex items-center gap-3">
+          <Avatar name="Amel Trabelsi" />
+          <div>
+            <p className="font-medium">Amel Trabelsi</p>
+            <p className="text-sm text-muted">Tunis, Tunisia</p>
+          </div>
+          <Badge tone="accent" className="ms-auto">
+            New
+          </Badge>
+        </div>
+        <div className="mt-6 grid gap-4">
+          <Select label="Status" defaultValue="new">
+            <option value="new">New</option>
+            <option value="packed">Packed</option>
+            <option value="shipped">Shipped</option>
+          </Select>
+          <Textarea label="Note" placeholder="Add a note for the packer" />
+        </div>
+      </Drawer>
     </div>
   )
 }
