@@ -7,7 +7,8 @@ import { describe, expect, it } from 'vitest'
 const css = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), 'themes.css'), 'utf8')
 
 const THEMES = ['light', 'dark', 'holiday'] as const
-const PAIRS: [string, string][] = [
+// [text or control, background, minimum contrast]. Text needs 4.5:1, form-field borders need 3:1.
+const PAIRS: [string, string, number?][] = [
   ['fg', 'bg'],
   ['fg', 'surface'],
   ['fg', 'raised'],
@@ -20,6 +21,9 @@ const PAIRS: [string, string][] = [
   ['hot', 'surface'],
   ['on-accent', 'accent'],
   ['on-hot', 'hot'],
+  ['control', 'surface', 3],
+  ['control', 'bg', 3],
+  ['control', 'raised', 3],
 ]
 
 function tokens(theme: string): Record<string, string> {
@@ -53,10 +57,10 @@ describe('theme contrast (WCAG AA, 4.5:1 for text)', () => {
   for (const theme of THEMES) {
     it(`${theme} theme text pairs are readable`, () => {
       const t = tokens(theme)
-      for (const [fg, bg] of PAIRS) {
+      for (const [fg, bg, min = 4.5] of PAIRS) {
         expect(t[fg], `${theme}: --${fg} missing`).toBeDefined()
         expect(t[bg], `${theme}: --${bg} missing`).toBeDefined()
-        expect(contrast(t[fg], t[bg]), `${theme}: ${fg} on ${bg}`).toBeGreaterThanOrEqual(4.5)
+        expect(contrast(t[fg], t[bg]), `${theme}: ${fg} on ${bg}`).toBeGreaterThanOrEqual(min)
       }
     })
   }

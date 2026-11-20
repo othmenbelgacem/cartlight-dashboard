@@ -17,6 +17,7 @@
   --link: #0a6860;
   --hot: #c23b26;
   --on-hot: #ffffff;
+  --control: #668680;
 }
 
 [data-theme='dark'] {
@@ -32,6 +33,7 @@
   --link: #5ed6c8;
   --hot: #ff7a66;
   --on-hot: #0a201e;
+  --control: #66908a;
 }
 
 [data-theme='holiday'] {
@@ -47,4 +49,5 @@
   --link: #ffd98a;
   --hot: #ff6b6b;
   --on-hot: #2a0e1a;
+  --control: #a06a7b;
 }

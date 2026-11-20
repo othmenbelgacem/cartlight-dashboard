@@ -17,6 +17,7 @@ import { Snowfall } from '../components/ui/Snowfall'
 import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSettings'
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
+import { usePageTitle } from './usePageTitle'
 
 const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
   light: { label: 'Light', Icon: Sun },
@@ -27,8 +28,7 @@ const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
 const SHORTCUT = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl K'
 
 function Breadcrumbs() {
-  const { pathname } = useLocation()
-  const current = ALL_NAV.find((item) => item.path === pathname)?.label ?? 'Page not found'
+  const current = usePageTitle()
 
   return (
     <nav aria-label="Breadcrumb" className="min-w-0">

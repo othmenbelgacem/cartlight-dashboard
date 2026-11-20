@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react'
-
+import { Link } from 'react-router'
 const SWATCHES = [
   ['bg', 'Background'],
   ['surface', 'Surface'],
@@ -73,7 +73,9 @@ export default function Foundation() {
             Delete order
           </button>
           <a href="#orders" className="text-link underline underline-offset-4">
-            View all orders
+            <Link to="/orders" className="text-link underline underline-offset-4">
+              View all orders
+            </Link>
           </a>
         </div>
         <p className="mt-4 text-sm text-muted">

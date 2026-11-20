@@ -13,10 +13,65 @@
   --color-link: var(--link);
   --color-hot: var(--hot);
   --color-on-hot: var(--on-hot);
+  --color-control: var(--control);
   --font-display:
     'Bricolage Grotesque Variable', 'Readex Pro Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Readex Pro Variable', ui-sans-serif, system-ui, sans-serif;
   --radius-tile: 1.5rem;
+}
+
+/* Motion: short and subtle. All of it is switched off for people who prefer reduced motion. */
+@theme {
+  --animate-rise: rise-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-pop: pop-in 0.18s ease-out both;
+  --animate-fade: fade-in 0.18s ease-out both;
+  --animate-slide-in: slide-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-snow: snow-fall linear infinite;
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in {
+    from {
+      transform: translateX(var(--slide-x, 100%));
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes snow-fall {
+    from {
+      transform: translate3d(0, -5vh, 0);
+    }
+    to {
+      transform: translate3d(var(--snow-drift, 3vw), 105vh, 0);
+    }
+  }
 }
 
 @layer base {
@@ -38,6 +93,7 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
