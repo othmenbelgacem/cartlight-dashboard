@@ -13,7 +13,7 @@ import { EmptyState, Skeleton } from '../components/ui/States'
 import { Tabs } from '../components/ui/Tabs'
 import { useToast } from '../components/ui/toast-context'
 import { Tooltip } from '../components/ui/Tooltip'
-
+import { Countdown } from '../components/ui/Countdown'
 const h2 = 'font-display text-xl font-bold'
 const kbd = 'rounded-md border border-line bg-raised px-2 py-1 font-sans text-xs'
 
@@ -326,6 +326,21 @@ export default function Components() {
           </p>
           <p className="mt-3 text-sm text-muted">
             Try typing “orders”, “dark” or “direction”. Arrow keys move, Enter runs the command.
+          </p>
+        </BentoTile>
+        <BentoTile size="large">
+          <h2 className={h2}>Holiday extras</h2>
+          <p className="mt-3 text-sm text-muted">
+            Countdown to Christmas, ready to reuse for any date.
+          </p>
+          <Countdown
+            className="mt-4"
+            target={new Date(2026, 11, 25)}
+            doneLabel="Merry Christmas!"
+          />
+          <p className="mt-4 text-sm text-muted">
+            Switch to the Holiday theme and press the snow button in the top bar. Snow is off by
+            default and never shows for people who prefer reduced motion.
           </p>
         </BentoTile>
 

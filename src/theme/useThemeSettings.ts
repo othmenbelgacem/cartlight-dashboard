@@ -5,9 +5,11 @@ export type Direction = 'ltr' | 'rtl'
 
 export const THEMES: readonly ThemeName[] = ['light', 'dark', 'holiday']
 const DIRECTIONS: readonly Direction[] = ['ltr', 'rtl']
+const SWITCH_STATES = ['on', 'off'] as const
 
 const THEME_KEY = 'cartlight.theme'
 const DIR_KEY = 'cartlight.dir'
+const SNOW_KEY = 'cartlight.snow'
 
 function readSaved<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
   try {
@@ -30,10 +32,13 @@ function systemTheme(): ThemeName {
   return window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light'
 }
 
-/** Holds the current theme and text direction, applies them to <html>, and remembers them. */
+/** Holds the theme, text direction and snow setting, applies them to <html>, and remembers them. */
 export function useThemeSettings() {
   const [theme, setTheme] = useState<ThemeName>(() => readSaved(THEME_KEY, THEMES, systemTheme()))
   const [dir, setDir] = useState<Direction>(() => readSaved(DIR_KEY, DIRECTIONS, 'ltr'))
+  const [snow, setSnow] = useState<boolean>(
+    () => readSaved(SNOW_KEY, SWITCH_STATES, 'off') === 'on',
+  )
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -46,5 +51,9 @@ export function useThemeSettings() {
     save(DIR_KEY, dir)
   }, [dir])
 
-  return { theme, setTheme, dir, setDir }
+  useEffect(() => {
+    save(SNOW_KEY, snow ? 'on' : 'off')
+  }, [snow])
+
+  return { theme, setTheme, dir, setDir, snow, setSnow }
 }

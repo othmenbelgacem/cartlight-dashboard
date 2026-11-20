@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import {
   ChevronRight,
+  CloudSnow,
   Languages,
   Menu,
   Moon,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import { CommandPalette, type Command } from '../components/ui/CommandPalette'
+import { Snowfall } from '../components/ui/Snowfall'
 import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSettings'
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
@@ -44,7 +46,8 @@ function Breadcrumbs() {
 }
 
 export default function AppShell() {
-  const { theme, setTheme, dir, setDir } = useThemeSettings()
+  const { theme, setTheme, dir, setDir, snow, setSnow } = useThemeSettings()
+  const { pathname } = useLocation()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -97,6 +100,18 @@ export default function AppShell() {
       keywords: 'direction arabic rtl ltr language',
       run: () => setDir(dir === 'rtl' ? 'ltr' : 'rtl'),
     },
+    ...(theme === 'holiday'
+      ? [
+          {
+            id: 'snow',
+            label: snow ? 'Turn snow off' : 'Turn snow on',
+            group: 'Appearance',
+            icon: <CloudSnow size={18} />,
+            keywords: 'snowfall effect christmas',
+            run: () => setSnow((value) => !value),
+          },
+        ]
+      : []),
     {
       id: 'sidebar',
       label: collapsed ? 'Expand sidebar' : 'Collapse sidebar',
@@ -151,6 +166,20 @@ export default function AppShell() {
                 {SHORTCUT}
               </kbd>
             </button>
+            {theme === 'holiday' && (
+              <button
+                type="button"
+                aria-label="Snow"
+                title="Snow"
+                aria-pressed={snow}
+                onClick={() => setSnow((value) => !value)}
+                className={`rounded-full border border-line p-2.5 transition-colors ${
+                  snow ? 'bg-accent text-on-accent' : 'bg-surface text-muted hover:text-fg'
+                }`}
+              >
+                <CloudSnow size={18} />
+              </button>
+            )}
             <div
               role="group"
               aria-label="Theme"
@@ -199,7 +228,9 @@ export default function AppShell() {
               </p>
             }
           >
-            <Outlet />
+            <div key={pathname} className="animate-rise">
+              <Outlet />
+            </div>
           </Suspense>
         </main>
       </div>
@@ -209,6 +240,7 @@ export default function AppShell() {
         onClose={() => setPaletteOpen(false)}
         commands={commands}
       />
+      {theme === 'holiday' && snow && <Snowfall />}
     </div>
   )
 }

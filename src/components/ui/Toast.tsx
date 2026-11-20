@@ -19,7 +19,7 @@ function ToastCard({ toast, dismiss }: ToastCardProps) {
     <div
       role={danger ? 'alert' : 'status'}
       className={cx(
-        'pointer-events-auto flex w-full items-start gap-3 rounded-2xl border border-line bg-surface p-4 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--fg)_45%,transparent)]',
+        'pointer-events-auto flex w-full animate-rise items-start gap-3 rounded-2xl border border-line bg-surface p-4 shadow-[0_18px_40px_-18px_color-mix(in_oklab,var(--fg)_45%,transparent)]',
         danger && 'border-s-4 border-s-hot',
       )}
     >
