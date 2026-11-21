@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { ToastProvider } from './components/ui/Toast'
 import AppShell from './layout/AppShell'
 
-const Overview = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Overview })))
+const Overview = lazy(() => import('./pages/Overview'))
 const Orders = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Orders })))
 const Products = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Products })))
 const Customers = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Customers })))

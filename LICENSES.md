@@ -14,6 +14,7 @@ Rule: only MIT, ISC, Apache-2.0 and SIL OFL assets. No images or stock photos ar
 | react | 19.3.1 | MIT |
 | react-dom | 19.3.1 | MIT |
 | react-router | 8.5.2 | MIT |
+| recharts | 3.11.0 | MIT |
 | tailwindcss | 4.3.5 | MIT |
 
 ## Development tools (not shipped to buyers' apps)

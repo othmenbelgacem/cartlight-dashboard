@@ -12,16 +12,6 @@ function PagePlaceholder({ title, description, sprint }: PagePlaceholderProps) {
   )
 }
 
-export function Overview() {
-  return (
-    <PagePlaceholder
-      title="Overview"
-      description="Sales numbers, revenue chart and the season command center."
-      sprint={2}
-    />
-  )
-}
-
 export function Orders() {
   return (
     <PagePlaceholder
