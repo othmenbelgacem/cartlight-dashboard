@@ -26,6 +26,8 @@ type DataTableProps<T> = {
   selectable?: boolean
   /** Shown when there are no rows. */
   empty?: ReactNode
+  /** Buttons shown next to the selection count. Receives the selected row ids that match the current rows. */
+  bulkActions?: (selectedIds: string[], clear: () => void) => ReactNode
 }
 
 type Sort = { id: string; direction: 'asc' | 'desc' } | null
@@ -39,6 +41,7 @@ export function DataTable<T>({
   pageSize = 10,
   selectable = false,
   empty,
+  bulkActions,
 }: DataTableProps<T>) {
   const [sort, setSort] = useState<Sort>(null)
   const [page, setPage] = useState(1)
@@ -63,6 +66,10 @@ export function DataTable<T>({
   const start = (current - 1) * pageSize
   const visible = sorted.slice(start, start + pageSize)
   const visibleIds = visible.map(getRowId)
+  // Only rows that are still in the table count, so a bulk action never touches hidden rows.
+  const rowIds = new Set(rows.map(getRowId))
+  const chosen = [...selected].filter((id) => rowIds.has(id))
+  const clearSelection = () => setSelected(new Set())
   const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selected.has(id))
   const someSelected = visibleIds.some((id) => selected.has(id))
 
@@ -100,12 +107,13 @@ export function DataTable<T>({
     <div>
       {selectable && (
         <div aria-live="polite" className="mb-3 flex min-h-9 items-center gap-3 text-sm">
-          {selected.size > 0 && (
+          {chosen.length > 0 && (
             <>
-              <span className="font-medium">{selected.size} selected</span>
-              <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}>
+              <span className="font-medium">{chosen.length} selected</span>
+              <Button variant="ghost" size="sm" onClick={clearSelection}>
                 Clear selection
               </Button>
+              {bulkActions?.(chosen, clearSelection)}
             </>
           )}
         </div>

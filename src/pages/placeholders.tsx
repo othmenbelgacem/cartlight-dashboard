@@ -12,16 +12,6 @@ function PagePlaceholder({ title, description, sprint }: PagePlaceholderProps) {
   )
 }
 
-export function Orders() {
-  return (
-    <PagePlaceholder
-      title="Orders"
-      description="Order list, filters, order details and the pipeline board."
-      sprint={2}
-    />
-  )
-}
-
 export function Products() {
   return (
     <PagePlaceholder
