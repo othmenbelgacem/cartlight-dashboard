@@ -7,6 +7,7 @@ Rule: only MIT, ISC, Apache-2.0 and SIL OFL assets. No images or stock photos ar
 
 | Package | Version | License |
 |---|---|---|
+| @dnd-kit/core | 6.3.1 | MIT |
 | @fontsource-variable/bricolage-grotesque | 5.3.0 | OFL-1.1 |
 | @fontsource-variable/readex-pro | 5.3.0 | OFL-1.1 |
 | @tailwindcss/vite | 4.3.5 | MIT |
