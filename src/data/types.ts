@@ -19,7 +19,6 @@ export type Customer = {
   name: string
   email: string
   city: string
-  segment: CustomerSegment
   /** ISO date, for example 2026-03-14. */
   joined: string
 }

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Fragment, Suspense, useEffect, useState } from 'react'
 import {
   ChevronRight,
   CloudSnow,
@@ -11,13 +11,13 @@ import {
   Sun,
   type LucideIcon,
 } from 'lucide-react'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { CommandPalette, type Command } from '../components/ui/CommandPalette'
 import { Snowfall } from '../components/ui/Snowfall'
 import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSettings'
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
-import { usePageTitle } from './usePageTitle'
+import { usePageTrail } from './usePageTitle'
 
 const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
   light: { label: 'Light', Icon: Sun },
@@ -28,18 +28,34 @@ const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
 const SHORTCUT = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘K' : 'Ctrl K'
 
 function Breadcrumbs() {
-  const current = usePageTitle()
+  const trail = usePageTrail()
 
   return (
     <nav aria-label="Breadcrumb" className="min-w-0">
       <ol className="flex items-center gap-1.5 text-sm">
         <li className="text-muted">Cartlight</li>
-        <li aria-hidden="true">
-          <ChevronRight size={14} className="text-muted rtl:rotate-180" />
-        </li>
-        <li aria-current="page" className="truncate font-medium">
-          {current}
-        </li>
+        {trail.map((crumb, index) => {
+          const last = index === trail.length - 1
+          return (
+            <Fragment key={crumb.label}>
+              <li aria-hidden="true">
+                <ChevronRight size={14} className="text-muted rtl:rotate-180" />
+              </li>
+              <li
+                aria-current={last ? 'page' : undefined}
+                className={last ? 'truncate font-medium' : 'text-muted'}
+              >
+                {crumb.to && !last ? (
+                  <Link to={crumb.to} className="underline-offset-4 hover:underline">
+                    {crumb.label}
+                  </Link>
+                ) : (
+                  crumb.label
+                )}
+              </li>
+            </Fragment>
+          )
+        })}
       </ol>
     </nav>
   )

@@ -6,7 +6,8 @@ import AppShell from './layout/AppShell'
 const Overview = lazy(() => import('./pages/Overview'))
 const Orders = lazy(() => import('./pages/Orders'))
 const Products = lazy(() => import('./pages/Products'))
-const Customers = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Customers })))
+const Customers = lazy(() => import('./pages/Customers'))
+const CustomerProfile = lazy(() => import('./pages/CustomerProfile'))
 const Analytics = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Analytics })))
 const Settings = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Settings })))
 const Foundation = lazy(() => import('./pages/Foundation'))
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="products" element={<Products />} />
             <Route path="customers" element={<Customers />} />
+            <Route path="customers/:id" element={<CustomerProfile />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="settings" element={<Settings />} />
             <Route path="foundation" element={<Foundation />} />

@@ -29,12 +29,9 @@ describe('sample data', () => {
     }
   })
 
-  it('covers every order status and customer segment', () => {
+  it('covers every order status', () => {
     expect(new Set(orders.map((order) => order.status))).toEqual(
       new Set(['new', 'packed', 'shipped', 'delivered', 'cancelled']),
-    )
-    expect(new Set(customers.map((customer) => customer.segment))).toEqual(
-      new Set(['new', 'loyal', 'at-risk']),
     )
   })
 

@@ -22,16 +22,6 @@ export function Products() {
   )
 }
 
-export function Customers() {
-  return (
-    <PagePlaceholder
-      title="Customers"
-      description="Customer list, profiles and segments."
-      sprint={2}
-    />
-  )
-}
-
 export function Analytics() {
   return (
     <PagePlaceholder

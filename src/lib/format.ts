@@ -19,3 +19,13 @@ export function formatPercent(value: number) {
   const sign = value > 0 ? '+' : value < 0 ? '−' : ''
   return `${sign}${Math.abs(value).toFixed(1)}%`
 }
+
+/** "2025-02-14" becomes "14 Feb 2025". */
+export function formatLongDate(iso: string) {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+}

@@ -6,7 +6,6 @@ export const customers: Customer[] = [
     name: 'Amel Trabelsi',
     email: 'amel.trabelsi@example.com',
     city: 'Tunis',
-    segment: 'loyal',
     joined: '2025-02-14',
   },
   {
@@ -14,7 +13,6 @@ export const customers: Customer[] = [
     name: 'Sami Gharbi',
     email: 'sami.gharbi@example.com',
     city: 'Sfax',
-    segment: 'loyal',
     joined: '2025-05-02',
   },
   {
@@ -22,7 +20,6 @@ export const customers: Customer[] = [
     name: 'Nour Haddad',
     email: 'nour.haddad@example.com',
     city: 'Sousse',
-    segment: 'new',
     joined: '2026-10-28',
   },
   {
@@ -30,7 +27,6 @@ export const customers: Customer[] = [
     name: 'Karim Jlassi',
     email: 'karim.jlassi@example.com',
     city: 'Tunis',
-    segment: 'loyal',
     joined: '2025-09-19',
   },
   {
@@ -38,7 +34,6 @@ export const customers: Customer[] = [
     name: 'Hela Mansouri',
     email: 'hela.mansouri@example.com',
     city: 'Bizerte',
-    segment: 'at-risk',
     joined: '2025-03-30',
   },
   {
@@ -46,7 +41,6 @@ export const customers: Customer[] = [
     name: 'Bilel Ben Salah',
     email: 'bilel.bensalah@example.com',
     city: 'Nabeul',
-    segment: 'at-risk',
     joined: '2025-07-11',
   },
   {
@@ -54,7 +48,6 @@ export const customers: Customer[] = [
     name: 'Ines Cherif',
     email: 'ines.cherif@example.com',
     city: 'Monastir',
-    segment: 'new',
     joined: '2026-11-04',
   },
   {
@@ -62,7 +55,6 @@ export const customers: Customer[] = [
     name: 'Youssef Mejri',
     email: 'youssef.mejri@example.com',
     city: 'Tunis',
-    segment: 'loyal',
     joined: '2025-01-22',
   },
   {
@@ -70,7 +62,6 @@ export const customers: Customer[] = [
     name: 'Rim Dridi',
     email: 'rim.dridi@example.com',
     city: 'Gabès',
-    segment: 'new',
     joined: '2026-11-09',
   },
   {
@@ -78,7 +69,6 @@ export const customers: Customer[] = [
     name: 'Walid Sassi',
     email: 'walid.sassi@example.com',
     city: 'Kairouan',
-    segment: 'at-risk',
     joined: '2025-04-17',
   },
   {
@@ -86,7 +76,6 @@ export const customers: Customer[] = [
     name: 'Salma Ayari',
     email: 'salma.ayari@example.com',
     city: 'Tunis',
-    segment: 'loyal',
     joined: '2025-08-08',
   },
   {
@@ -94,7 +83,6 @@ export const customers: Customer[] = [
     name: 'Hatem Bouzid',
     email: 'hatem.bouzid@example.com',
     city: 'Sfax',
-    segment: 'new',
     joined: '2026-11-12',
   },
 ]
