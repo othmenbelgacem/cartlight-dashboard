@@ -28,6 +28,8 @@ type DataTableProps<T> = {
   empty?: ReactNode
   /** Buttons shown next to the selection count. Receives the selected row ids that match the current rows. */
   bulkActions?: (selectedIds: string[], clear: () => void) => ReactNode
+  /** Short text shown in the selection bar while nothing is selected. */
+  selectionHint?: string
 }
 
 type Sort = { id: string; direction: 'asc' | 'desc' } | null
@@ -42,6 +44,7 @@ export function DataTable<T>({
   selectable = false,
   empty,
   bulkActions,
+  selectionHint,
 }: DataTableProps<T>) {
   const [sort, setSort] = useState<Sort>(null)
   const [page, setPage] = useState(1)
@@ -107,7 +110,7 @@ export function DataTable<T>({
     <div>
       {selectable && (
         <div aria-live="polite" className="mb-3 flex min-h-9 items-center gap-3 text-sm">
-          {chosen.length > 0 && (
+          {chosen.length > 0 ? (
             <>
               <span className="font-medium">{chosen.length} selected</span>
               <Button variant="ghost" size="sm" onClick={clearSelection}>
@@ -115,6 +118,8 @@ export function DataTable<T>({
               </Button>
               {bulkActions?.(chosen, clearSelection)}
             </>
+          ) : (
+            selectionHint && <span className="text-muted">{selectionHint}</span>
           )}
         </div>
       )}

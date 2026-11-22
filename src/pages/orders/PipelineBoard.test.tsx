@@ -49,6 +49,17 @@ describe('orders board', () => {
     await userEvent.click(screen.getByRole('menuitem', { name: 'Cancel order' }))
     expect(screen.queryByText('#1042')).not.toBeInTheDocument()
   })
+  it('shows the first six cards of a long column and the rest on request', async () => {
+    await openBoard()
+    const delivered = column('Delivered')
+    expect(within(delivered).getAllByRole('button', { name: /^View order/ })).toHaveLength(6)
+    await userEvent.click(within(delivered).getByRole('button', { name: /^Show \d+ more$/ }))
+    expect(
+      within(delivered).getAllByRole('button', { name: /^View order/ }).length,
+    ).toBeGreaterThan(6)
+    await userEvent.click(within(delivered).getByRole('button', { name: 'Show fewer' }))
+    expect(within(delivered).getAllByRole('button', { name: /^View order/ })).toHaveLength(6)
+  })
 
   it('opens the order details from a card', async () => {
     await openBoard()

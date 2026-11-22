@@ -5,7 +5,7 @@ import AppShell from './layout/AppShell'
 
 const Overview = lazy(() => import('./pages/Overview'))
 const Orders = lazy(() => import('./pages/Orders'))
-const Products = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Products })))
+const Products = lazy(() => import('./pages/Products'))
 const Customers = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Customers })))
 const Analytics = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Analytics })))
 const Settings = lazy(() => import('./pages/placeholders').then((m) => ({ default: m.Settings })))

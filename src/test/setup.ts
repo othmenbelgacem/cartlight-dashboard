@@ -13,3 +13,10 @@ class ResizeObserverStub {
   disconnect() {}
 }
 globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver
+
+// The test environment has no screen size, so charts warn that they have none. Hide that one message.
+const originalWarn = console.warn
+console.warn = (...args: unknown[]) => {
+  if (String(args[0]).includes('of chart should be greater than 0')) return
+  originalWarn(...args)
+}

@@ -123,8 +123,12 @@ type ColumnProps = {
   onOpen: (orderId: string) => void
 }
 
+const COLUMN_LIMIT = 6
+
 function Column({ status, orders, total, onMove, onOpen }: ColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
+  const [expanded, setExpanded] = useState(false)
+  const shown = expanded ? orders : orders.slice(0, COLUMN_LIMIT)
   const headingId = `column-${status}`
 
   return (
@@ -150,9 +154,19 @@ function Column({ status, orders, total, onMove, onOpen }: ColumnProps) {
             No orders
           </p>
         )}
-        {orders.map((order) => (
+        {shown.map((order) => (
           <DraggableCard key={order.id} order={order} onMove={onMove} onOpen={onOpen} />
         ))}
+        {orders.length > COLUMN_LIMIT && (
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((value) => !value)}
+          >
+            {expanded ? 'Show fewer' : `Show ${orders.length - COLUMN_LIMIT} more`}
+          </Button>
+        )}
       </div>
     </section>
   )

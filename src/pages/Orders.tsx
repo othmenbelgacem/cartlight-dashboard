@@ -216,6 +216,7 @@ export default function Orders() {
               getRowLabel={(order) => `order ${order.id}`}
               pageSize={10}
               selectable
+              selectionHint="Tick rows to update several orders together."
               bulkActions={(ids, clear) => (
                 <>
                   <Button
