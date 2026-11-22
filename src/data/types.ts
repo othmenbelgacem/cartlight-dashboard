@@ -8,6 +8,8 @@ export type Product = {
   price: number
   stock: number
   status: ProductStatus
+  /** A short text for the shop team. Optional. */
+  description?: string
 }
 
 export type CustomerSegment = 'new' | 'loyal' | 'at-risk'

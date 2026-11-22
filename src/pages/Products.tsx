@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LayoutGrid, List, SearchX } from 'lucide-react'
+import { LayoutGrid, List, Plus, SearchX } from 'lucide-react'
 import { useSearchParams } from 'react-router'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
@@ -7,10 +7,12 @@ import { Card } from '../components/ui/Card'
 import { DataTable, type Column } from '../components/ui/DataTable'
 import { Input, Select } from '../components/ui/fields'
 import { EmptyState } from '../components/ui/States'
-import { products } from '../data'
+import { useToast } from '../components/ui/toast-context'
+import { products as seedProducts } from '../data'
 import type { Product, ProductStatus } from '../data/types'
 import { formatTnd } from '../lib/format'
 import { ProductArt } from './products/ProductArt'
+import { ProductDrawer } from './products/ProductDrawer'
 import { ProductStatusBadge, StockMeter } from './products/ProductParts'
 import {
   DEFAULT_PRODUCT_FILTERS,
@@ -26,7 +28,7 @@ const VIEWS = [
 
 const CATEGORIES: Product['category'][] = ['Kitchen', 'Home', 'Beauty', 'Food', 'Fashion']
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product, onEdit }: { product: Product; onEdit: () => void }) {
   const headingId = `product-${product.id}`
   return (
     <li>
@@ -47,6 +49,15 @@ function ProductCard({ product }: { product: Product }) {
           <div className="mt-3">
             <StockMeter stock={product.stock} />
           </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="mt-4"
+            aria-label={`Edit ${product.name}`}
+            onClick={onEdit}
+          >
+            Edit
+          </Button>
         </div>
       </article>
     </li>
@@ -54,18 +65,38 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 export default function Products() {
+  const toast = useToast()
   const [params, setParams] = useSearchParams()
   const view = params.get('view') === 'list' ? 'list' : 'grid'
+  const [items, setItems] = useState<Product[]>(seedProducts)
   const [filters, setFilters] = useState<ProductFilters>(DEFAULT_PRODUCT_FILTERS)
+  // A product id to edit, "new" to add a product, or null when the drawer is closed.
+  const [editing, setEditing] = useState<string | 'new' | null>(null)
 
-  const visible = filterProducts(products, filters)
-  const low = products.filter((product) => stockLevel(product.stock) === 'low').length
-  const out = products.filter((product) => stockLevel(product.stock) === 'out').length
+  const visible = filterProducts(items, filters)
+  const low = items.filter((product) => stockLevel(product.stock) === 'low').length
+  const out = items.filter((product) => stockLevel(product.stock) === 'out').length
   const filtersActive =
     filters.query !== '' ||
     filters.category !== 'all' ||
     filters.status !== 'all' ||
     filters.stock !== 'all'
+
+  const nextNumber = Math.max(...items.map((product) => Number(product.id.slice(2)))) + 1
+  const nextId = `p-${String(nextNumber).padStart(2, '0')}`
+  const draft =
+    editing === 'new' ? 'new' : (items.find((product) => product.id === editing) ?? null)
+
+  function saveProduct(product: Product) {
+    const isNew = !items.some((candidate) => candidate.id === product.id)
+    setItems((list) =>
+      isNew
+        ? [...list, product]
+        : list.map((candidate) => (candidate.id === product.id ? product : candidate)),
+    )
+    setEditing(null)
+    toast({ title: `${product.name} ${isNew ? 'added' : 'saved'}` })
+  }
 
   const columns: Column<Product>[] = [
     {
@@ -110,6 +141,20 @@ export default function Products() {
       cell: (product) => <ProductStatusBadge status={product.status} />,
       sortBy: (product) => product.status,
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: (product) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label={`Edit ${product.name}`}
+          onClick={() => setEditing(product.id)}
+        >
+          Edit
+        </Button>
+      ),
+    },
   ]
 
   const empty = (
@@ -132,28 +177,34 @@ export default function Products() {
         <div>
           <h1 className="font-display text-4xl font-bold tracking-tight">Products</h1>
           <p className="mt-2 max-w-xl text-muted">
-            {products.length} products, {low} low on stock, {out} out of stock.
+            {items.length} products, {low} low on stock, {out} out of stock.
           </p>
         </div>
-        <div
-          role="group"
-          aria-label="View"
-          className="flex rounded-full border border-line bg-surface p-0.5"
-        >
-          {VIEWS.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              aria-pressed={view === id}
-              onClick={() => setParams(id === 'list' ? { view: 'list' } : {}, { replace: true })}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                view === id ? 'bg-accent text-on-accent' : 'text-muted hover:text-fg'
-              }`}
-            >
-              <Icon size={16} />
-              {label}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-3">
+          <div
+            role="group"
+            aria-label="View"
+            className="flex rounded-full border border-line bg-surface p-0.5"
+          >
+            {VIEWS.map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={view === id}
+                onClick={() => setParams(id === 'list' ? { view: 'list' } : {}, { replace: true })}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  view === id ? 'bg-accent text-on-accent' : 'text-muted hover:text-fg'
+                }`}
+              >
+                <Icon size={16} />
+                {label}
+              </button>
+            ))}
+          </div>
+          <Button onClick={() => setEditing('new')}>
+            <Plus size={16} />
+            Add product
+          </Button>
         </div>
       </div>
 
@@ -220,7 +271,11 @@ export default function Products() {
             ) : (
               <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {visible.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onEdit={() => setEditing(product.id)}
+                  />
                 ))}
               </ul>
             )
@@ -236,6 +291,14 @@ export default function Products() {
           )}
         </div>
       </Card>
+
+      <ProductDrawer
+        key={editing ?? 'closed'}
+        draft={draft}
+        nextId={nextId}
+        onClose={() => setEditing(null)}
+        onSave={saveProduct}
+      />
     </div>
   )
 }
