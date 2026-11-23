@@ -29,3 +29,13 @@ export function formatLongDate(iso: string) {
     timeZone: 'UTC',
   })
 }
+
+/** 1184 becomes "1,184". */
+export function formatCount(value: number) {
+  return new Intl.NumberFormat('en').format(value)
+}
+
+/** 2.456 becomes "2.5%". Unlike formatPercent it never shows a plus sign. */
+export function formatRate(value: number) {
+  return `${value.toFixed(1)}%`
+}

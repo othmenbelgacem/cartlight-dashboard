@@ -12,7 +12,7 @@ import {
   YAxis,
 } from 'recharts'
 import { type CategorySales, type DailyPoint } from '../../data/stats'
-import { formatShortDate, formatTnd } from '../../lib/format'
+import { formatCount, formatShortDate, formatTnd } from '../../lib/format'
 import { prefersReducedMotion } from '../../lib/motion'
 import { useDirection } from '../../lib/useDirection'
 
@@ -24,27 +24,37 @@ type TooltipProps = {
   active?: boolean
   payload?: ReadonlyArray<{ value?: number | string }>
   label?: string | number
+  format: (value: number) => string
 }
 
-function ChartTooltip({ active, payload, label }: TooltipProps) {
+function ChartTooltip({ active, payload, label, format }: TooltipProps) {
   if (!active || !payload?.length) return null
   return (
     <div className="rounded-xl border border-line bg-surface px-3 py-2 text-sm shadow-lg">
       <p className="text-muted">{formatShortDate(String(label))}</p>
-      <p className="font-medium tabular-nums">{formatTnd(Number(payload[0].value))}</p>
+      <p className="font-medium tabular-nums">{format(Number(payload[0].value))}</p>
     </div>
   )
 }
 
-/** Daily revenue as an area chart. Mirrors itself in right-to-left layouts. */
-export function RevenueChart({ data }: { data: DailyPoint[] }) {
+type TrendProps = {
+  data: Array<{ date: string; value: number }>
+  /** Describes the chart for screen readers. */
+  label: string
+  format: (value: number) => string
+  /** Needs to be different for every chart on the same page. */
+  gradientId: string
+}
+
+/** A daily trend as an area chart. Mirrors itself in right-to-left layouts. */
+function AreaTrend({ data, label, format, gradientId }: TrendProps) {
   const rtl = useDirection() === 'rtl'
   return (
-    <div className="h-72 w-full" role="img" aria-label="Daily revenue for the last 30 days">
+    <div className="h-72 w-full" role="img" aria-label={label}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
           <defs>
-            <linearGradient id="revenue-fill" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.5} />
               <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
             </linearGradient>
@@ -66,18 +76,51 @@ export function RevenueChart({ data }: { data: DailyPoint[] }) {
             axisLine={false}
             width={44}
           />
-          <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--control)' }} />
+          <Tooltip
+            content={<ChartTooltip format={format} />}
+            cursor={{ stroke: 'var(--control)' }}
+          />
           <Area
             type="monotone"
-            dataKey="revenue"
+            dataKey="value"
             stroke="var(--link)"
             strokeWidth={2.5}
-            fill="url(#revenue-fill)"
+            fill={`url(#${gradientId})`}
             isAnimationActive={!prefersReducedMotion()}
           />
         </AreaChart>
       </ResponsiveContainer>
     </div>
+  )
+}
+
+/** Daily revenue as an area chart. */
+export function RevenueChart({ data }: { data: DailyPoint[] }) {
+  return (
+    <AreaTrend
+      data={data.map((point) => ({ date: point.date, value: point.revenue }))}
+      label="Daily revenue for the last 30 days"
+      format={formatTnd}
+      gradientId="revenue-fill"
+    />
+  )
+}
+
+/** Daily visitors as an area chart. */
+export function TrafficChart({
+  data,
+  label,
+}: {
+  data: Array<{ date: string; visits: number }>
+  label: string
+}) {
+  return (
+    <AreaTrend
+      data={data.map((point) => ({ date: point.date, value: point.visits }))}
+      label={label}
+      format={(value) => `${formatCount(value)} visitors`}
+      gradientId="traffic-fill"
+    />
   )
 }
 

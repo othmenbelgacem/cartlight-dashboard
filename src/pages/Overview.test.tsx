@@ -24,7 +24,9 @@ describe('overview page', () => {
     render(<App />)
     await screen.findByRole('heading', { name: 'Key numbers' })
     expect(screen.getAllByText(formatTnd(kpis.revenue.total)).length).toBeGreaterThan(0)
-    expect(screen.getByText(String(kpis.orders.total))).toBeInTheDocument()
+    // Look inside the Orders card only: the countdown above shows changing numbers that could match.
+    const ordersCard = screen.getByText('Orders', { selector: 'p' }).closest('section')!
+    expect(within(ordersCard).getByText(String(kpis.orders.total))).toBeInTheDocument()
   })
 
   it('lists the five newest orders', async () => {
