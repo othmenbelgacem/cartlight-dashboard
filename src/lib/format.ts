@@ -39,3 +39,10 @@ export function formatCount(value: number) {
 export function formatRate(value: number) {
   return `${value.toFixed(1)}%`
 }
+
+/** 0 becomes "Today", 1 becomes "Yesterday", 5 becomes "5 days ago". */
+export function formatDaysAgo(days: number) {
+  if (days <= 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  return `${days} days ago`
+}

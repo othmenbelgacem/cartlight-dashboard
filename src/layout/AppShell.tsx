@@ -19,6 +19,7 @@ import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSetti
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
 import { usePageTrail } from './usePageTitle'
+import { NotificationsCenter } from '../notifications/NotificationsCenter'
 
 // The assistant loads the first time someone opens it, so it does not slow down the first visit.
 const AssistantPanel = lazy(() => import('../ai/AssistantPanel'))
@@ -196,6 +197,7 @@ export default function AppShell() {
                 {SHORTCUT}
               </kbd>
             </button>
+            <NotificationsCenter />
             <button
               type="button"
               aria-label="Open assistant"
