@@ -119,6 +119,9 @@ export const recentOrders = orders.slice(0, 5).map((order) => ({
 /** The goal for the Christmas sales season, in TND. */
 export const SEASON_GOAL = 3500
 
+/** The day the season ends: Christmas. */
+export const SEASON_END = new Date(2026, 11, 25)
+
 export const season = {
   goal: SEASON_GOAL,
   sold: revenueTotal,

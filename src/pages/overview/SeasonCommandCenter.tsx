@@ -1,17 +1,16 @@
 import { useState } from 'react'
 import { BentoTile } from '../../components/ui/Card'
 import { Countdown } from '../../components/ui/Countdown'
-import { season } from '../../data/stats'
+import { SEASON_END, season } from '../../data/stats'
 import { formatShortDate, formatTnd } from '../../lib/format'
 
-const CHRISTMAS = new Date(2026, 11, 25)
 const DAY = 86_400_000
 
 /** The signature widget: a shop-window arch that fills with light as the season goal gets closer. */
 export function SeasonCommandCenter({ now }: { now?: Date }) {
   const [loadedAt] = useState(() => new Date())
   const current = now ?? loadedAt
-  const daysLeft = Math.max(1, Math.ceil((CHRISTMAS.getTime() - current.getTime()) / DAY))
+  const daysLeft = Math.max(1, Math.ceil((SEASON_END.getTime() - current.getTime()) / DAY))
   const dailyTarget = Math.max(0, season.goal - season.sold) / daysLeft
 
   return (
@@ -21,7 +20,7 @@ export function SeasonCommandCenter({ now }: { now?: Date }) {
           <h2 className="font-display text-xl font-bold">Season command center</h2>
           <p className="mt-1 text-muted">Christmas sales season. Goal: {formatTnd(season.goal)}.</p>
 
-          <Countdown className="mt-5 max-w-lg" target={CHRISTMAS} doneLabel="Merry Christmas!" />
+          <Countdown className="mt-5 max-w-lg" target={SEASON_END} doneLabel="Merry Christmas!" />
 
           <dl className="mt-6 grid gap-5 sm:grid-cols-3">
             <div>

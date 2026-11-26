@@ -1,4 +1,4 @@
-import { Fragment, Suspense, useEffect, useState } from 'react'
+import { Fragment, Suspense, lazy, useEffect, useState } from 'react'
 import {
   ChevronRight,
   CloudSnow,
@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   Search,
   Snowflake,
+  Sparkles,
   Sun,
   type LucideIcon,
 } from 'lucide-react'
@@ -18,6 +19,9 @@ import { THEMES, useThemeSettings, type ThemeName } from '../theme/useThemeSetti
 import { ALL_NAV } from './nav'
 import Sidebar from './Sidebar'
 import { usePageTrail } from './usePageTitle'
+
+// The assistant loads the first time someone opens it, so it does not slow down the first visit.
+const AssistantPanel = lazy(() => import('../ai/AssistantPanel'))
 
 const THEME_META: Record<ThemeName, { label: string; Icon: LucideIcon }> = {
   light: { label: 'Light', Icon: Sun },
@@ -68,6 +72,8 @@ export default function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
+  // 'never' until it is first opened. After that it stays loaded, so the conversation is kept.
+  const [assistant, setAssistant] = useState<'never' | 'open' | 'closed'>('never')
 
   useEffect(() => {
     if (!menuOpen) return
@@ -129,6 +135,14 @@ export default function AppShell() {
         ]
       : []),
     {
+      id: 'assistant',
+      label: 'Open assistant',
+      group: 'Tools',
+      icon: <Sparkles size={18} />,
+      keywords: 'ai chat ask help questions',
+      run: () => setAssistant('open'),
+    },
+    {
       id: 'sidebar',
       label: collapsed ? 'Expand sidebar' : 'Collapse sidebar',
       group: 'Layout',
@@ -181,6 +195,16 @@ export default function AppShell() {
               <kbd className="hidden rounded-md border border-line bg-raised px-1.5 py-0.5 font-sans text-xs lg:inline">
                 {SHORTCUT}
               </kbd>
+            </button>
+            <button
+              type="button"
+              aria-label="Open assistant"
+              aria-haspopup="dialog"
+              onClick={() => setAssistant('open')}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-surface p-2.5 text-sm text-muted transition-colors hover:text-fg md:px-4 md:py-2"
+            >
+              <Sparkles size={18} />
+              <span className="hidden md:inline">Assistant</span>
             </button>
             {theme === 'holiday' && (
               <button
@@ -256,6 +280,11 @@ export default function AppShell() {
         onClose={() => setPaletteOpen(false)}
         commands={commands}
       />
+      {assistant !== 'never' && (
+        <Suspense fallback={null}>
+          <AssistantPanel open={assistant === 'open'} onClose={() => setAssistant('closed')} />
+        </Suspense>
+      )}
       {theme === 'holiday' && snow && <Snowfall />}
     </div>
   )
